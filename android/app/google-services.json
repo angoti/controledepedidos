@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "640948777931",
+    "project_id": "controle-de-pedidos-app-68fd9",
+    "storage_bucket": "controle-de-pedidos-app-68fd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640948777931:android:deea5645506e8382083c4e",
+        "android_client_info": {
+          "package_name": "com.professorangoti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640948777931-u7afm2hrvf3hskpon84po5fm4l3gvjpg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH7lQm-3n_KnFMH4yKzh5PVmeblPV5JC4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640948777931-u7afm2hrvf3hskpon84po5fm4l3gvjpg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
