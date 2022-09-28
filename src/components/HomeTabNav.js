@@ -1,12 +1,12 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import Catalog from './Catalog';
+import CatalogScreen from '../screens/CatalogScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Usuario from './Usuario';
+import UsuarioScreen from '../screens/UsuarioScreen';
 
 const Tab = createBottomTabNavigator();
 
-export default function Home() {
+export default function HomeTabNav() {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -25,12 +25,12 @@ export default function Home() {
       })}>
       <Tab.Screen
         name="Usuário"
-        component={Usuario}
+        component={UsuarioScreen}
         options={{headerShown: false}}
       />
       <Tab.Screen
         name="Catálogo de produtos"
-        component={Catalog}
+        component={CatalogScreen}
         options={{headerShown: false}}
       />
     </Tab.Navigator>

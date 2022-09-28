@@ -1,33 +1,54 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useState, useEffect} from 'react';
+import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
 
-const SplashScreen = () => {
-  const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
+const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
+
+const SplashScreen = ({navigation}) => {
+  console.log('passando pela splashscreen');
+  //State for ActivityIndicator animation
+  const [animating, setAnimating] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setAnimating(false);
+      //Check if user_id is set or not
+      //If not then send for Authentication
+      //else send to Home Screen
+      AsyncStorage.getItem('user_id').then(value =>
+        navigation.replace(value === null ? 'AuthRoutes' : 'HomeRoutes'),
+      );
+    }, 1000);
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>Projeto X</Text>
-      <Image source={{uri: LOADING_IMAGE_URL}} style={styles.splashLogo} />
+      <Image
+        source={{uri: LOADING_IMAGE_URL}}
+        style={{width: '90%', resizeMode: 'contain', margin: 30}}
+      />
+      <ActivityIndicator
+        animating={animating}
+        color="#FFFFFF"
+        size="large"
+        style={styles.activityIndicator}
+      />
     </View>
   );
 };
 
+export default SplashScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#18073f',
+    justifyContent: 'center',
+    backgroundColor: '#307ecc',
   },
-  titulo: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    padding: 8,
-    color: '#0fa',
-  },
-  splashLogo: {
-    padding: 8,
-    width: 32,
-    height: 32,
+  activityIndicator: {
+    alignItems: 'center',
+    height: 80,
   },
 });
-
-export default SplashScreen;

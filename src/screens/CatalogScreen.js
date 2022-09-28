@@ -3,7 +3,7 @@ import {Avatar, Button, Card, Title, Paragraph} from 'react-native-paper';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />;
 
-const Catalog = () => (
+const CatalogScreen = () => (
   <Card>
     <Card.Title
       title="Card Title"
@@ -22,5 +22,5 @@ const Catalog = () => (
   </Card>
 );
 
-export default Catalog;
+export default CatalogScreen;
 // const styles = StyleSheet.create({});

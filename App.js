@@ -1,95 +1,66 @@
-import {createContext, useMemo, useReducer} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Home from './src/screens/Home';
-import LogIn, {logOut} from './src/screens/LogIn';
+import {createContext, useState} from 'react';
+import HomeTabNav from './src/components/HomeTabNav';
+import LogInScreen, {logOut} from './src/screens/LogInScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
 import SplashScreen from './src/screens/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 
-export const AuthContext = createContext(null);
+// @ts-ignore
+export const AuthContext = createContext();
+
+const AuthRoutes = () => {
+  // Stack Navigator for Login and Sign up Screen
+  return (
+    <Stack.Navigator initialRouteName="LoginScreen">
+      <Stack.Screen
+        name="LoginScreen"
+        component={LogInScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="RegisterScreen"
+        component={RegisterScreen}
+        options={{
+          title: 'Register', //Set Header Title
+          headerStyle: {
+            backgroundColor: '#307ecc', //Set Header color
+          },
+          headerTintColor: '#fff', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 export default function App() {
-  const [state, dispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case 'RESTORE_TOKEN':
-          return {
-            ...prevState,
-            isLoading: false,
-          };
-        case 'SIGN_IN':
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case 'SIGN_OUT':
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    },
-  );
+  const [user, setUser] = useState(null);
 
-  const authContext = useMemo(
-    () => ({
-      signIn: async data => {
-        // @ts-ignore
-        dispatch({type: 'SIGN_IN', token: data});
-      },
-      // @ts-ignore
-      signOut: () => {
-        logOut();
-        // @ts-ignore
-        dispatch({type: 'SIGN_OUT'});
-      },
-      usuario: state.userToken,
-    }),
-    [state.userToken],
-  );
-
-  if (state.isLoading == null) {
-    return <SplashScreen />;
-  }
   return (
-    <AuthContext.Provider value={authContext}>
+    <AuthContext.Provider value={{user, setUser, logOut}}>
       <NavigationContainer>
-        <Stack.Navigator>
-          {state.userToken == null ? (
-            // No token found, user isn't signed in
-            <Stack.Screen
-              name="SignIn"
-              component={LogIn}
-              options={{
-                title: 'Sign in',
-                headerStyle: {
-                  backgroundColor: '#2b008f',
-                },
-                headerTintColor: '#fff',
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                },
-                // When logging out, a pop animation feels intuitive
-                // You can remove this if you want the default 'push' animation
-                // animationTypeForReplace: state.isSignout ? 'pop' : 'push',
-              }}
-            />
-          ) : (
-            // User is signed in
-            <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{headerShown: false}}
-            />
-          )}
+        <Stack.Navigator initialRouteName="SplashScreen">
+          <Stack.Screen
+            name="SplashScreen"
+            component={SplashScreen}
+            options={{headerShown: false}}
+          />
+          {/* Stack da autenticação */}
+          <Stack.Screen
+            name="AuthRoutes"
+            component={AuthRoutes}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="HomeRoutes"
+            component={HomeTabNav}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
