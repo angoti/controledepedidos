@@ -1,6 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createContext, useState} from 'react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import HomeTabNav from './src/components/HomeTabNav';
 import LogInScreen, {logOut} from './src/screens/LogInScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -42,27 +44,29 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   return (
-    <AuthContext.Provider value={{user, setUser, logOut}}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="SplashScreen">
-          <Stack.Screen
-            name="SplashScreen"
-            component={SplashScreen}
-            options={{headerShown: false}}
-          />
-          {/* Stack da autenticação */}
-          <Stack.Screen
-            name="AuthRoutes"
-            component={AuthRoutes}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="HomeRoutes"
-            component={HomeTabNav}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <AuthContext.Provider value={{user, setUser, logOut}}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="SplashScreen">
+            <Stack.Screen
+              name="SplashScreen"
+              component={SplashScreen}
+              options={{headerShown: false}}
+            />
+            {/* Stack da autenticação */}
+            <Stack.Screen
+              name="AuthRoutes"
+              component={AuthRoutes}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="HomeRoutes"
+              component={HomeTabNav}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </GestureHandlerRootView>
   );
 }

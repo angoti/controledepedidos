@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import {ActivityIndicator, View, StyleSheet, Image} from 'react-native';
+import {AuthContext} from '../../App';
+import {loginSilently} from './LogInScreen';
 
 const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
 
@@ -10,16 +11,35 @@ const SplashScreen = ({navigation}) => {
   //State for ActivityIndicator animation
   const [animating, setAnimating] = useState(true);
 
+  // contexto
+  const {setUser} = useContext(AuthContext);
+
   useEffect(() => {
     setTimeout(() => {
       setAnimating(false);
-      //Check if user_id is set or not
-      //If not then send for Authentication
-      //else send to Home Screen
-      AsyncStorage.getItem('user_id').then(value =>
-        navigation.replace(value === null ? 'AuthRoutes' : 'HomeRoutes'),
-      );
-    }, 1000);
+      loginSilently()
+        .then(user => {
+          console.log('--------> login silently ' + JSON.stringify(user));
+          if (typeof user === 'undefined') {
+            navigation.replace('AuthRoutes');
+          } else {
+            const usuario = {
+              // @ts-ignore
+              nome: user.user.name,
+              // @ts-ignore
+              foto: user.user.photo,
+              // @ts-ignore
+              id: user.user.id,
+              email: user.user.email,
+            };
+            setUser(usuario);
+            navigation.replace('HomeRoutes');
+          }
+        })
+        .catch(error =>
+          console.log('---------> SplashScreen signInSilently: ' + error),
+        );
+    }, 3000);
   }, []);
 
   return (

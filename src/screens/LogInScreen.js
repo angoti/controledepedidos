@@ -19,13 +19,26 @@ import {
 import {AuthContext} from '../../App';
 import Loader from '../components/Loader';
 
-export async function logOut() {
+GoogleSignin.configure({
+  webClientId:
+    '640948777931-u7afm2hrvf3hskpon84po5fm4l3gvjpg.apps.googleusercontent.com',
+});
+
+export const logOut = async () => {
   try {
     await GoogleSignin.signOut();
   } catch (error) {
     console.error(error);
   }
-}
+};
+
+export const loginSilently = async () => {
+  try {
+    return await GoogleSignin.signInSilently();
+  } catch (error) {
+    console.log('---------> signInSilently: ' + error);
+  }
+};
 
 const LogInScreen = ({navigation}) => {
   // controle do botão do Google
@@ -34,17 +47,15 @@ const LogInScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
   // controles do formulário
+  // @ts-ignore
   const [userEmail, setUserEmail] = useState('');
+  // @ts-ignore
   const [userPassword, setUserPassword] = useState('');
+  // @ts-ignore
   const [errortext, setErrortext] = useState('');
 
   // contexto
   const {setUser} = useContext(AuthContext);
-
-  GoogleSignin.configure({
-    webClientId:
-      '640948777931-u7afm2hrvf3hskpon84po5fm4l3gvjpg.apps.googleusercontent.com',
-  });
 
   async function onGoogleButtonPress() {
     setIsSigninInProgress(true);
@@ -73,12 +84,28 @@ const LogInScreen = ({navigation}) => {
   const processaGoolgeLogin = () => {
     onGoogleButtonPress()
       .then(user => {
-        setUser(user.user);
+        console.log('--------> loginScreen ' + JSON.stringify(user));
+        // @ts-ignore
+        const usuario = {
+          // @ts-ignore
+          nome: user.user.providerData[0].displayName,
+          // @ts-ignore
+          foto: user.user.providerData[0].photoURL,
+          // @ts-ignore
+          id: user.user.providerData[0].uid,
+          // @ts-ignore
+          email: user.user.providerData[0].email,
+        };
+        setUser(usuario);
         setLoading(false);
         setIsSigninInProgress(false);
         navigation.navigate('HomeRoutes');
       })
-      .catch(error => console.log('------------------> Erro: ' + error));
+      .catch(error => {
+        setLoading(false);
+        setIsSigninInProgress(false);
+        console.log('------------------> Erro: ' + error);
+      });
   };
 
   return (
